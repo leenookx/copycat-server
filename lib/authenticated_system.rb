@@ -186,4 +186,62 @@ module AuthenticatedSystem
         :expires => @current_user.remember_token_expires_at }
     end
 
+    def not_logged_in_required
+      !logged_in? || permission_denied
+    end
+   
+    def check_role(role)
+      unless logged_in? && @current_user.has_role?(role)
+        if logged_in?
+          permission_denied
+        else
+          store_referer
+          access_denied
+        end
+      end
+    end
+
+    def check_administrator_role
+      check_role('administrator')
+    end
+
+    def access_denied
+      respond_to do |format|
+        format.html do
+          store_location
+          flash[:error] = "You must be logged in to access this feature."
+          redirect_to :controller => '/session', :action => 'new'
+        end
+        format.xml do
+          request_http_basic_authentication 'Web Password'
+        end
+      end
+    end
+
+    def permission_denied      
+      respond_to do |format|
+        format.html do
+          domain_name = "http://localhost:3000"
+          http_referer = session[:refer_to]
+          if http_referer.nil?
+            store_referer
+            http_referer = ( session[:refer_to] || domain_name )
+          end
+          flash[:error] = "You don't have permission to complete that action."
+          #The [0..20] represents the 21 characters in http://localhost:3000
+          #You have to set that to the number of characters in your domain name 
+          if http_referer[0..20] != domain_name   
+            session[:refer_to] = nil
+            redirect_to root_path
+          else
+            redirect_to_referer_or_default(root_path)   
+          end
+        end
+        format.xml do
+          headers["Status"]           = "Unauthorized"
+          headers["WWW-Authenticate"] = %(Basic realm="Web Password")
+          render :text => "You don't have permission to complete this action.", :status => '401 Unauthorized'
+        end
+      end
+    end
 end

@@ -5,8 +5,6 @@ protected
   # Returns true or false if the user is logged in.
   # Preloads @current_user with the user model if they're logged in.
   def logged_in?
-    puts Time.now
-    puts current_user
     current_user != false
   end
 

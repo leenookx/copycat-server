@@ -119,7 +119,7 @@ class User < ActiveRecord::Base
   end
 
   def forget_me
-    self.remember_me_token_expires_as = nil
+    self.remember_token_expires_at = nil
     self.remember_token = nil
     save(false)
   end
@@ -167,7 +167,7 @@ protected
     self.crypted_password = encrypt(password)
   end
 
-  def password_required?
+  def password_required
     crypted_password.blank? || !password.blank?
   end
 
@@ -187,10 +187,5 @@ private
     self.activated_at = Time.now.utc
     self.activation_code = nil
     save(false)
-  end
-
-  def active?
-    # the existence of an activation code means they have not activated yet
-    activation_code.nil?
   end
 end

@@ -1,0 +1,16 @@
+.gitignore
+.git
+doc
+log/*
+test
+db/development.sqlite3
+db/test.sqlite3
+config/initializers/new_rails_defaults.rb
+deploy_commands
+ignore_files
+create_release.sh
+Capfile
+RELEASE
+config/environments/test.rb
+config/environments/development.rb
+README

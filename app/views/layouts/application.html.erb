@@ -1,4 +1,15 @@
-<ul>
+<html>
+<head>
+  <title><%= @title %></title>
+  <%= javascript_include_tag :defaults %>
+  <%= stylesheet_link_tag "site.css" %>
+</head>
+<body>
+<div id="main">
+  <!--  START NAVIGATION AT THE TOP OF THE PAGE -->
+    <div id="top-nav">
+      <span style="float:left">
+  <ul>
     <% if logged_in? %>
       <li>Logged in as:</li> 
       <li><%= link_to h(current_user.login.capitalize), user_path(current_user) %></li>
@@ -15,4 +26,88 @@
       <li><%= link_to 'Sign Up', new_user_path %></li>      
       <li><%= link_to 'Forgot Password?', forgot_password_path %></li>     
     <% end %>         
-</ul>
+  </ul>
+      </span>
+    </div>
+
+    <!-- END NAVIGATION AT THE TOP OF THE PAGE -->
+	
+    <!-- START PAGE HEADER CONTAINER -->
+
+    <div id="header">
+      <%= image_tag("header.gif", :size => "820x137", :alt => "Who do you want to copy today?") %>
+    </div>
+
+    <!-- END PAGE HEADER CONTAINER -->
+
+    <!-- START MAIN CONTENT BLOCK -->
+		
+    <div id="content">
+      <% if flash[:notice] -%>
+        <div id="notice"><%= flash[:notice] %></div>
+      <% end -%>
+
+      <%= @content_for_layout %>
+    </div>
+
+    <!-- END MAIN CONTENT BLOCK -->
+
+  <!-- START FOOTER CONTAINER -->
+  <div id="footer">
+
+    <hr />
+
+    <%= link_to_unless_current "About Us",  { :controller => 'site', :action => 'about' }, { :class => "small-navigation" } %>
+		| <%= link_to_unless_current "Contact Us",  { :controller => 'site', :action => 'contact' }, { :class => "small-navigation" } %>
+		| <%= link_to_unless_current "Terms of Use",  { :controller => 'site', :action => 'terms' }, { :class => "small-navigation" } %>
+		| <%= link_to_unless_current "Privacy Policy",  { :controller => 'site', :action => 'privacy' }, { :class => "small-navigation" } %>
+
+    <br />
+
+    <hr />
+
+  </div>
+
+  <!-- END FOOTER CONTAINER -->
+
+  <% if ENV["RAILS_ENV"] == "development" %>
+    <!-- START DEBUG ENTRIES -->
+		
+    <br />
+    <hr>
+		
+    <div id="debug">
+      <a href="#" onclick="Element.toggle('params_debug_info');return false">params</a> |
+      <a href="#" onclick="Element.toggle('session_debug_info');return false">session</a> |
+      <a href="#" onclick="Element.toggle('env_debug_info');return false">env</a> |
+      <a href="#" onclick="Element.toggle('request_debug_info');return false">request</a>
+			
+      <fieldset id="params_debug_info" class="debug_info" style="display:none">
+        <legend>params</legend>
+        <%= debug(params) %>
+      </fieldset>
+
+      <fieldset id="session_debug_info" class="debug_info" style="display:none">
+        <legend>session</legend>
+        <%= debug(session) %>
+      </fieldset>
+			
+      <fieldset id="env_debug_info" class="debug_info" style="display:none">
+        <legend>env</legend>
+        <%= debug(request.env) %>
+      </fieldset>
+
+      <fieldset id="request_debug_info" class="debug_info" style="display:none">
+        <legend>request</legend>
+        <%= debug(request) %>
+      </fieldset>
+    </div>
+			
+    <!-- END DEBUG ENTRIES -->
+   <% end %>
+  </div>
+</div>
+
+<!-- END MAIN CONTAINER -->
+</body>
+</html>

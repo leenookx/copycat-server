@@ -1,13 +1,11 @@
 #!/bin/bash
 
-TMP_DIR=tmp_dir
+TMP_DIR="tmp_dir"
 VERSION=`cat VERSION`
 RELEASE_FILE="release-"$VERSION".tar.gz"
 
 rm -rf $TMP_DIR
 rm -rf $RELEASE_FILE
-
-mkdir -p $TMP_DIR
 
 git clone ~/copycat-server $TMP_DIR
 
@@ -23,4 +21,4 @@ cd $TMP_DIR
 cp -R ~/site-configs/copycat-server/* .
 cd ..
 
-tar -C $TMP_DIR -C -z -f $RELEASE_FILE .
+tar -C $TMP_DIR -c -z -f $RELEASE_FILE .
